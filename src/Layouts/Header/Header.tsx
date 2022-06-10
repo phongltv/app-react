@@ -1,4 +1,4 @@
-import Menu from '../menu/Menu';
+import Menu from '../Menu/Menu';
 
 function Header() {
   return (
