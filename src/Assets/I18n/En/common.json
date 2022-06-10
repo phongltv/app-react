@@ -1,5 +1,9 @@
 {
   "common": {
-    "home": "Home"
+    "menu": {
+      "catagory": "Catagories",
+      "product": "Products",
+      "logout": "SignOut"
+    }
   }
 }
