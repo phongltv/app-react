@@ -1,10 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Header from './shared/components/header/Header';
-import Footer from './shared/components/footer/Footer';
-import Main from './shared/components/main/Main';
+import Footer from './Layouts/Footer/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './Layouts/Header/Header';
+import Main from './Layouts/Main/Main';
 
 function App() {
   return (
@@ -13,22 +12,6 @@ function App() {
       <main className='py-3 flex-fill'><Main></Main></main>
       <footer className='fixed-bottom p-3 border-top bg-primary text-white'><Footer></Footer></footer>
     </div>
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.tsx</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
   );
 }
 

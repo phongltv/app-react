@@ -4,12 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './modules/login/Login';
-import Register from './modules/register/Register';
+import Login from './Pages/Login/Login';
+import Register from './Pages/Register/Register';
+import './Config/i18n/i18n.ts';
+import i18n from './Config/i18n/i18n';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+i18n.changeLanguage('jp');
+
 root.render(
   <BrowserRouter>
     <Routes>

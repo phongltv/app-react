@@ -1,0 +1,6 @@
+{
+  "web-app": {
+    "signin": "SignIn",
+    "signup": "SignUp"
+  }
+}
