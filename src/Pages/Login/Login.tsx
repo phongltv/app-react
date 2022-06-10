@@ -4,7 +4,7 @@ function Login() {
   return (
     <Container>
       <Row>
-        <Col className='text-center'>Login page</Col>
+        <Col className='text-center'>Login page 1</Col>
       </Row>
     </Container>
    );
