@@ -42,3 +42,10 @@
   top: 0;
   width: 100%;
 }
+
+.menu {
+  width: 20%;
+  min-width: 130px;
+  min-height: 100vh;
+  background-color: #f4f8fc;
+}
