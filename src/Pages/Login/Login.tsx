@@ -6,28 +6,10 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 
-import { API, Auth } from 'aws-amplify';
-import { signUpWithEmail } from '../../Services/Auth/authentication';
-import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+import { API, Auth, graphqlOperation } from 'aws-amplify';
+import { queries } from '../../graphql/queries';
+import { mutations } from '../../graphql/mutations';
 
-API.configure({
-  "aws_appsync_graphqlEndpoint": "https://p3v4nzgaxvcubnsqksxlljmes4.appsync-api.ap-northeast-1.amazonaws.com/graphql",
-  "aws_appsync_region": "ap-northeast-1",
-  "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
-  "aws_appsync_apiKey": "da2-fxji3dqadzcabearglw5uxgvhi",
-})
-
-// const client = new AWSAppSyncClient({
-//   url: "https://p3v4nzgaxvcubnsqksxlljmes4.appsync-api.ap-northeast-1.amazonaws.com/graphql",
-//   region: "ap-northeast-1",
-//   auth: {
-//     type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
-//     jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken(),
-//   },
-// });
-
-
-// const newTodo = await API.graphql({ query: mutations.createTodo, variables: {input: todoDetails}});
 
 export default function Login() {
   const signIn = Yup.object().shape({
@@ -57,56 +39,33 @@ export default function Login() {
     }
   });
 
-  // const listProducts = query {
-  //   listProducts {
-  //     items {
-  //       id name quility
-  //     }
-  //   }
-  // }
-
-
 
 const onSubmit = async (data: any) => {
   console.log(data);
   console.log(getValues('username'));
-  // const user = await Auth.signUp({data.username, data.password,  attributes: { data.username } });
 
-  // const attributes = {email: 'phongn-itsj@hikesiya.co.jp'};
-  data = { ...data, email: 'phongn-itsj@hikesiya.co.jp' };
+  // const user = await Auth.signIn(
+  //   data.username,
+  //   data.password
+  // );
 
-  const user = await Auth.signIn(
-    data.username,
-    data.password,
-    // {email: 'phongn-itsj@hikesiya.co.jp'}
-  );
-
-
-  // const user = signUpWithEmail({
-  //   username: data.username,
-  //   password: data.password,
-  //   attributes: {
-  //     email: data.email
-  //   }
-  // })
-
-
-  // Simple query
-  const products_query = `
-  listProducts {
-    listProducts {
-      items {
-        id
-        name
-        quility
-      }
-    }
+  const myProduct = {
+    name: 'product ' + new Date().getTime(),
+    quility: 90
   }
-  `
-  const products = await API.graphql({ query: products_query });
-  console.log(products); // result: { "data": { "listTodos": { "items": [/* ..... */] } } }
 
-  console.log(user);
+  // const products = await API.graphql({ query: queries.listProducts });
+  // const products = await API.graphql(graphqlOperation(mutations.createProduct, {createproductinput: myProduct }));
+  // console.log(products); // result: { "data": { "listTodos": { "items": [/* ..... */] } } }
+
+  const book = {content: "content add from react", price: 10, rating: 1.5, title: "react app graphQL"};
+  const bookNews =  await API.graphql(graphqlOperation(mutations.createBook, {input: book }));
+  console.log(bookNews);
+
+  // const products = await API.graphql({ query: queries.listBooks });
+  // console.log(products); result: { "data": { "listTodos": { "items": [/* ..... */] } } }
+
+  // console.log(user);
   setResult(true)
 }
 

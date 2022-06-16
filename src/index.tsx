@@ -8,10 +8,13 @@ import Login from './Pages/Login/Login';
 import Register from './Pages/Register/Register';
 import './Config/i18n/i18n.ts';
 
-import { Auth } from 'aws-amplify';
+import Amplify, { API, Auth } from 'aws-amplify';
 import awsExports from './Config/aws/aws-exports';
 
-Auth.configure(awsExports);
+Amplify.configure(awsExports);
+// Auth.configure(awsExports);
+// API.configure(awsExports);
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
