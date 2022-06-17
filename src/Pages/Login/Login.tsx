@@ -1,68 +1,135 @@
-import { Button, Col, Container, Row, Form, ModalHeader, Nav, NavLink, InputGroup } from 'react-bootstrap';
-import { CSSProperties, useState } from 'react';
+import { Button, Col, Container, Row, Form, Nav, NavLink } from 'react-bootstrap';
+import { useState } from 'react';
 
 import './Login.scss'
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+
+import { API, Auth, graphqlOperation } from 'aws-amplify';
+import { queries } from '../../graphql/queries';
+import { mutations } from '../../graphql/mutations';
 
 
 export default function Login() {
-  const [validated, setValidated] = useState(false);
+  const signIn = Yup.object().shape({
+    username: Yup.string()
+      .required('Username is required')
+      .min(4, 'Username 4 characters minimum')
+      .max(30, 'Username must not exceed 15 characters'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password 6 characters minimum')
+      .max(25, 'Password must not exceed 25 characters'),
 
-  const login = (event: any) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-      console.log('FORM ERROR')
+  });
+
+  const validationSchema = signIn;
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      username: '',
+      password: ''
     }
-
-    setValidated(true);
-  };
+  });
 
 
-  return (
-    <Container>
-      <Row>
-        <Col className='col-sm-12 col-md-6' style={{ "margin": "auto" }}>
-          <Form className="login-form" noValidate validated={validated} onSubmit={login} >
+const onSubmit = async (data: any) => {
+  console.log(data);
+  console.log(getValues('username'));
+
+  // const user = await Auth.signIn(
+  //   data.username,
+  //   data.password
+  // );
+
+  const myProduct = {
+    name: 'product ' + new Date().getTime(),
+    quility: 90
+  }
+
+  // const products = await API.graphql({ query: queries.listProducts });
+  // const products = await API.graphql(graphqlOperation(mutations.createProduct, {createproductinput: myProduct }));
+  // console.log(products); // result: { "data": { "listTodos": { "items": [/* ..... */] } } }
+
+  const book = {content: "content add from react", price: 10, rating: 1.5, title: "react app graphQL"};
+  const bookNews =  await API.graphql(graphqlOperation(mutations.createBook, {input: book }));
+  console.log(bookNews);
+
+  // const products = await API.graphql({ query: queries.listBooks });
+  // console.log(products); result: { "data": { "listTodos": { "items": [/* ..... */] } } }
+
+  // console.log(user);
+  setResult(true)
+}
+
+const [result, setResult] = useState(false);
+const [showError, setShowError] = useState(false)
+
+
+
+const LoginSuccess = () => (
+  <div className="text-success display-6">
+    Success! Welcome {getValues('username')}
+  </div>
+)
+const ShowError = () => (
+  <div className="text-danger" style={{ 'textAlign': 'center', 'fontSize': '19px' }}>
+    Login failed!
+  </div>
+)
+
+return (
+  <Container>
+    <Row>
+      <Col className='col-sm-12 col-md-6' style={{ "margin": "auto" }}>
+        {result ? <LoginSuccess /> : <div className="register-form">
+          <Form className="login-form" onSubmit={handleSubmit(onSubmit)}>
             <Form.Text className='header'>SIGN IN </Form.Text>
-            <Form.Group controlId="formUsername" className='mt-2'>
+            <Form.Group className="form-group">
               <Form.Label>Username</Form.Label>
-              <Form.Control required
+              <Form.Control
                 type="text"
-                placeholder="Enter your username or email address"
-                maxLength={20}
-                minLength={4}
+                {...register('username')}
+                className={`form-control ${errors.username ? 'is-invalid' : ''}`}
               />
-              <Form.Control.Feedback type="invalid">
-                Username 4 characters minimum
-              </Form.Control.Feedback>
+              <Form.Control.Feedback className="invalid-feedback">{errors.username?.message}</Form.Control.Feedback>
             </Form.Group>
-
-
-            <Form.Group controlId="formPassword" className='mt-2'>
+            <Form.Group className="form-group mt-3">
               <Form.Label>Password</Form.Label>
               <Form.Control
-                required
-                minLength={6}
-                maxLength={50}
                 type="password"
-                placeholder="Enter your password"
+                {...register('password')}
+                className={`form-control ${errors.password ? 'is-invalid' : ''}`}
               />
-              <Form.Control.Feedback type="invalid">
-                Password 6 characters minimum
-              </Form.Control.Feedback>
+              <Form.Control.Feedback className="invalid-feedback">{errors.password?.message}</Form.Control.Feedback>
             </Form.Group>
-            <Button className='mt-3 sign-in-button' variant="primary" type="submit">
-              Submit
-            </Button>
+            <Form.Group className="form-group mt-3" >
+              <Button type="submit" className="btn btn-primary">
+                Sign In
+              </Button>
+            </Form.Group>
+            <Form.Group>
+              <NavLink><Form.Text className="forgot-password-link">Forgot your password?</Form.Text></NavLink>
+              <Nav.Link href="/signUp"><Form.Text className="sign-up-link">No account? Sign up now</Form.Text></Nav.Link>
+              <Form.Text>{showError ? <ShowError /> : null}</Form.Text>
+            </Form.Group>
 
-            <NavLink><Form.Text className="forgot-password-link">Forgot your password?</Form.Text></NavLink>
-            <NavLink><Form.Text className="sign-up-link">No account? Sign up for one now</Form.Text></NavLink>
           </Form>
-        </Col>
-      </Row>
-    </Container>
-  );
+        </div>
+
+        }
+      </Col>
+    </Row>
+  </Container>
+
+);
 
 }
 

@@ -1,5 +1,9 @@
 {
   "common": {
-    "home": "ホーム"
+    "menu": {
+      "catagory": "カテゴリー",
+      "product": "リスト製品",
+      "logout": "ログアウト"
+    }
   }
 }

@@ -1,6 +1,8 @@
 {
   "web-app": {
-    "signin": "SignIn",
-    "signup": "SignUp"
+    "signin": "Signin",
+    "signup": "Signup",
+    "main": "This is main content.",
+    "footer": "This is footer."
   }
 }
