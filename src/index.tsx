@@ -10,6 +10,7 @@ import './Config/i18n/i18n.ts';
 
 import Amplify, { API, Auth } from 'aws-amplify';
 import awsExports from './Config/aws/aws-exports';
+import VerifyEmail from './Pages/VerifyEmail/VerifyEmail';
 
 Amplify.configure(awsExports);
 // Auth.configure(awsExports);
@@ -26,6 +27,7 @@ root.render(
       <Route path="/" element={<App />} />
       <Route path="/signIn" element={<Login />} />
       <Route path="/signUp" element={<Register />} />
+      <Route path="/verifyEmail" element={<VerifyEmail />} />
     </Routes>
   </BrowserRouter>
 );
