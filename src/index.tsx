@@ -10,8 +10,12 @@ import './Config/i18n/i18n.ts';
 
 import Amplify, { API, Auth } from 'aws-amplify';
 import awsExports from './Config/aws/aws-exports';
+<<<<<<< HEAD
 import BookDetail from './Pages/BookDetail/BookDetail';
 import Main from './Layouts/Main/Main';
+=======
+import VerifyEmail from './Pages/VerifyEmail/VerifyEmail';
+>>>>>>> 0b961029f0876881a16f1eccf01a3684821d4a92
 
 Amplify.configure(awsExports);
 // Auth.configure(awsExports);
@@ -32,7 +36,11 @@ root.render(
 
       <Route path="/signIn" element={<Login />} />
       <Route path="/signUp" element={<Register />} />
+<<<<<<< HEAD
 
+=======
+      <Route path="/verifyEmail" element={<VerifyEmail />} />
+>>>>>>> 0b961029f0876881a16f1eccf01a3684821d4a92
     </Routes>
   </BrowserRouter>
 );
