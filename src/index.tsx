@@ -10,6 +10,8 @@ import './Config/i18n/i18n.ts';
 
 import Amplify, { API, Auth } from 'aws-amplify';
 import awsExports from './Config/aws/aws-exports';
+import BookDetail from './Pages/BookDetail/BookDetail';
+import Main from './Layouts/Main/Main';
 
 Amplify.configure(awsExports);
 // Auth.configure(awsExports);
@@ -23,9 +25,14 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<App />} />
+      <Route path="/" element={<App />} >
+        <Route path="/" element={<Main />} />
+        <Route path="/detail/:id" element={<BookDetail />} />
+      </Route>
+
       <Route path="/signIn" element={<Login />} />
       <Route path="/signUp" element={<Register />} />
+
     </Routes>
   </BrowserRouter>
 );
