@@ -1,17 +1,18 @@
 import { Button, Col, Container, Row, Form, Nav, NavLink } from 'react-bootstrap';
 import { useState } from 'react';
-
+import { useNavigate } from "react-router-dom"
 import './Login.scss'
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-
 import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { queries } from '../../graphql/queries';
 import { mutations } from '../../graphql/mutations';
+import { AnyObject } from 'yup/lib/types';
 
 
 export default function Login() {
+  const navigate = useNavigate()
   const signIn = Yup.object().shape({
     username: Yup.string()
       .required('Username is required')
@@ -40,48 +41,43 @@ export default function Login() {
   });
 
 
-const onSubmit = async (data: any) => {
-  console.log(data);
-  console.log(getValues('username'));
+  const signInSuccess =async (data:{username:string,password:string},event:any) => {
+   try{
+    let user = await Auth.signIn(
+      data.username,
+      data.password
+      )
+      if(user!=null){
+        setResult(true);
+        setTimeout(() => navigate('/'), 2000);
+      }
+     else{
+        setShowError(true)
+        setErrorMessage('No Cognito user found')
+     }
 
-  // const user = await Auth.signIn(
-  //   data.username,
-  //   data.password
-  // );
-
-  const myProduct = {
-    name: 'product ' + new Date().getTime(),
-    quility: 90
+   }
+   catch(error:any){
+      setShowError(true)
+      setErrorMessage(error.toString())
+      event.preventDefault()
+      event.stopPropagation()
+   } 
   }
-
-  // const products = await API.graphql({ query: queries.listProducts });
-  // const products = await API.graphql(graphqlOperation(mutations.createProduct, {createproductinput: myProduct }));
-  // console.log(products); // result: { "data": { "listTodos": { "items": [/* ..... */] } } }
-
-  const book = {content: "content add from react", price: 10, rating: 1.5, title: "react app graphQL"};
-  const bookNews =  await API.graphql(graphqlOperation(mutations.createBook, {input: book }));
-  console.log(bookNews);
-
-  // const products = await API.graphql({ query: queries.listBooks });
-  // console.log(products); result: { "data": { "listTodos": { "items": [/* ..... */] } } }
-
-  // console.log(user);
-  setResult(true)
-}
 
 const [result, setResult] = useState(false);
 const [showError, setShowError] = useState(false)
-
+const [errorMessage,setErrorMessage]=useState('')
 
 
 const LoginSuccess = () => (
   <div className="text-success display-6">
-    Success! Welcome {getValues('username')}
+    Success! Welcome {getValues('username')}. Redirecting...
   </div>
 )
 const ShowError = () => (
   <div className="text-danger" style={{ 'textAlign': 'center', 'fontSize': '19px' }}>
-    Login failed!
+    Login failed! {errorMessage}
   </div>
 )
 
@@ -90,7 +86,7 @@ return (
     <Row>
       <Col className='col-sm-12 col-md-6' style={{ "margin": "auto" }}>
         {result ? <LoginSuccess /> : <div className="register-form">
-          <Form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+          <Form className="login-form" onSubmit={handleSubmit(signInSuccess)}>
             <Form.Text className='header'>SIGN IN </Form.Text>
             <Form.Group className="form-group">
               <Form.Label>Username</Form.Label>
@@ -111,7 +107,7 @@ return (
               <Form.Control.Feedback className="invalid-feedback">{errors.password?.message}</Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="form-group mt-3" >
-              <Button type="submit" className="btn btn-primary">
+              <Button style={{width:'100%'}} type="submit" className="btn btn-primary ">
                 Sign In
               </Button>
             </Form.Group>

@@ -49,3 +49,9 @@
   min-height: 100vh;
   background-color: #f4f8fc;
 }
+#main,.main{
+  width: 100%;
+  min-width: 130px;
+  min-height: 100vh;
+  background-color: #f4f8fc;
+}
